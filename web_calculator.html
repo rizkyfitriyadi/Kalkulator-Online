@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Web by Rizky Fitriyadi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .calculator-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .display {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            border: 2px solid #e9ecef;
+            text-align: center;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .input-group input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .operation-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .operation-btn {
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #667eea;
+            color: white;
+        }
+
+        .operation-btn:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .operation-btn.active {
+            background: #4c51bf;
+            transform: scale(0.95);
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .calculate-btn:hover {
+            background: linear-gradient(135deg, #38a169, #2f855a);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(72, 187, 120, 0.3);
+        }
+
+        .continue-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .continue-section.show {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .continue-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .continue-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .continue-btn.yes {
+            background: #48bb78;
+            color: white;
+        }
+
+        .continue-btn.yes:hover {
+            background: #38a169;
+        }
+
+        .continue-btn.no {
+            background: #e53e3e;
+            color: white;
+        }
+
+        .continue-btn.no:hover {
+            background: #c53030;
+        }
+
+        .reset-btn {
+            width: 100%;
+            padding: 12px;
+            background: #718096;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .reset-btn:hover {
+            background: #4a5568;
+        }
+
+        .error {
+            color: #e53e3e;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .success {
+            color: #48bb78;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        @media (max-width: 600px) {
+            .calculator-container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .operation-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator-container">
+        <div class="header">
+            <h1>🧮 Kalkulator Web</h1>
+            <p>by Rizky Fitriyadi</p>
+        </div>
+
+        <div class="display" id="display">
+            Masukkan angka untuk memulai
+        </div>
+
+        <div class="input-group">
+            <label for="angka1">Angka Pertama:</label>
+            <input type="number" id="angka1" placeholder="Masukkan angka pertama">
+            <div class="error" id="error1"></div>
+        </div>
+
+        <div class="input-group">
+            <label for="angka2">Angka Kedua:</label>
+            <input type="number" id="angka2" placeholder="Masukkan angka kedua">
+            <div class="error" id="error2"></div>
+        </div>
+
+        <div class="input-group">
+            <label>Pilih Operasi:</label>
+            <div class="operation-buttons">
+                <button class="operation-btn" data-op="+" title="Penjumlahan">+</button>
+                <button class="operation-btn" data-op="-" title="Pengurangan">-</button>
+                <button class="operation-btn" data-op="*" title="Perkalian">×</button>
+                <button class="operation-btn" data-op="/" title="Pembagian">÷</button>
+            </div>
+            <div class="error" id="errorOp"></div>
+        </div>
+
+        <button class="calculate-btn" id="calculateBtn">Hitung</button>
+
+        <div class="continue-section" id="continueSection">
+            <p><strong>Ingin melakukan operasi lanjutan?</strong></p>
+            <p>Hasil sebelumnya akan dijadikan angka pertama</p>
+            <div class="continue-buttons">
+                <button class="continue-btn yes" id="continueYes">Ya, Lanjutkan</button>
+                <button class="continue-btn no" id="continueNo">Tidak, Selesai</button>
+            </div>
+        </div>
+
+        <button class="reset-btn" id="resetBtn">Reset Kalkulator</button>
+
+        <div class="footer">
+            <p>Semoga harimu menyenangkan! 😊</p>
+        </div>
+    </div>
+
+    <script>
+        // State management
+        let currentOperation = '';
+        let lastResult = null;
+        let isChaining = false;
+
+        // DOM elements
+        const display = document.getElementById('display');
+        const angka1Input = document.getElementById('angka1');
+        const angka2Input = document.getElementById('angka2');
+        const calculateBtn = document.getElementById('calculateBtn');
+        const continueSection = document.getElementById('continueSection');
+        const continueYes = document.getElementById('continueYes');
+        const continueNo = document.getElementById('continueNo');
+        const resetBtn = document.getElementById('resetBtn');
+        const operationBtns = document.querySelectorAll('.operation-btn');
+
+        // Error elements
+        const error1 = document.getElementById('error1');
+        const error2 = document.getElementById('error2');
+        const errorOp = document.getElementById('errorOp');
+
+        // Operation functions
+        function penjumlahan(a, b) {
+            return a + b;
+        }
+
+        function pengurangan(a, b) {
+            return a - b;
+        }
+
+        function perkalian(a, b) {
+            return a * b;
+        }
+
+        function pembagian(a, b) {
+            if (b === 0) {
+                throw new Error('Pembagian dengan nol tidak diperbolehkan');
+            }
+            return a / b;
+        }
+
+        // Clear errors
+        function clearErrors() {
+            error1.textContent = '';
+            error2.textContent = '';
+            errorOp.textContent = '';
+        }
+
+        // Validate inputs
+        function validateInputs() {
+            clearErrors();
+            let isValid = true;
+
+            const angka1 = parseFloat(angka1Input.value);
+            const angka2 = parseFloat(angka2Input.value);
+
+            if (isNaN(angka1) || angka1Input.value === '') {
+                error1.textContent = 'Periksa kembali input kamu, pastikan hanya memasukkan angka';
+                isValid = false;
+            }
+
+            if (isNaN(angka2) || angka2Input.value === '') {
+                error2.textContent = 'Periksa kembali input kamu, pastikan hanya memasukkan angka';
+                isValid = false;
+            }
+
+            if (!currentOperation) {
+                errorOp.textContent = 'Periksa kembali input kamu, pastikan memilih operasi (+|-|*|/)';
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        // Operation button handlers
+        operationBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all buttons
+                operationBtns.forEach(b => b.classList.remove('active'));
+                
+                // Add active class to clicked button
+                btn.classList.add('active');
+                
+                currentOperation = btn.dataset.op;
+                clearErrors();
+            });
+        });
+
+        // Calculate function
+        function calculate() {
+            if (!validateInputs()) {
+                return;
+            }
+
+            const angka1 = parseFloat(angka1Input.value);
+            const angka2 = parseFloat(angka2Input.value);
+            let hasil;
+
+            try {
+                switch (currentOperation) {
+                    case '+':
+                        hasil = penjumlahan(angka1, angka2);
+                        break;
+                    case '-':
+                        hasil = pengurangan(angka1, angka2);
+                        break;
+                    case '*':
+                        hasil = perkalian(angka1, angka2);
+                        break;
+                    case '/':
+                        hasil = pembagian(angka1, angka2);
+                        break;
+                    default:
+                        throw new Error('Operasi tidak valid');
+                }
+
+                // Display result
+                const operationSymbol = currentOperation === '*' ? '×' : currentOperation === '/' ? '÷' : currentOperation;
+                display.innerHTML = `
+                    <div style="font-size: 18px; margin-bottom: 10px;">
+                        ${angka1} ${operationSymbol} ${angka2} =
+                    </div>
+                    <div style="font-size: 32px; color: #48bb78;">
+                        ${hasil}
+                    </div>
+                `;
+
+                lastResult = hasil;
+                continueSection.classList.add('show');
+
+            } catch (error) {
+                if (error.message.includes('nol')) {
+                    error2.textContent = error.message;
+                } else {
+                    display.innerHTML = `<div style="color: #e53e3e;">Error: ${error.message}</div>`;
+                }
+            }
+        }
+
+        // Continue with calculation
+        function continueCal() {
+            angka1Input.value = lastResult;
+            angka2Input.value = '';
+            angka2Input.focus();
+            continueSection.classList.remove('show');
+            
+            // Clear operation selection
+            operationBtns.forEach(b => b.classList.remove('active'));
+            currentOperation = '';
+            
+            display.innerHTML = `
+                <div style="font-size: 18px; margin-bottom: 10px;">
+                    Lanjutan dari hasil:
+                </div>
+                <div style="font-size: 28px; color: #667eea;">
+                    ${lastResult}
+                </div>
+            `;
+            isChaining = true;
+        }
+
+        // Reset calculator
+        function resetCalculator() {
+            angka1Input.value = '';
+            angka2Input.value = '';
+            currentOperation = '';
+            lastResult = null;
+            isChaining = false;
+            
+            operationBtns.forEach(b => b.classList.remove('active'));
+            continueSection.classList.remove('show');
+            clearErrors();
+            
+            display.textContent = 'Masukkan angka untuk memulai';
+            angka1Input.focus();
+        }
+
+        // Event listeners
+        calculateBtn.addEventListener('click', calculate);
+        continueYes.addEventListener('click', continueCal);
+        continueNo.addEventListener('click', () => {
+            display.innerHTML = `
+                <div style="font-size: 18px; color: #48bb78;">
+                    Terima kasih telah menggunakan program kalkulator by Rizky Fitriyadi
+                </div>
+                <div style="font-size: 16px; margin-top: 10px; color: #666;">
+                    Semoga harimu menyenangkan! 😊
+                </div>
+            `;
+            continueSection.classList.remove('show');
+        });
+        resetBtn.addEventListener('click', resetCalculator);
+
+        // Enter key support
+        document.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                if (continueSection.classList.contains('show')) {
+                    continueCal();
+                } else {
+                    calculate();
+                }
+            }
+        });
+
+        // Input validation on type
+        [angka1Input, angka2Input].forEach(input => {
+            input.addEventListener('input', clearErrors);
+        });
+
+        // Focus on first input when page loads
+        window.addEventListener('load', () => {
+            angka1Input.focus();
+        });
+    </script>
+</body>
+</html>
