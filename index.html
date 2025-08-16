@@ -64,11 +64,11 @@
             border-radius: 15px;
             padding: 20px;
             margin-bottom: 20px;
-            min-height: 80px;
+            min-height: 60px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            font-size: 22px;
             font-weight: bold;
             color: #333;
             border: 2px solid #e9ecef;
@@ -91,7 +91,8 @@
             padding: 12px 15px;
             border: 2px solid #e1e5e9;
             border-radius: 10px;
-            font-size: 16px;
+            font-size: 18px;
+            font-weight: 500;
             transition: all 0.3s ease;
             outline: none;
         }
@@ -260,7 +261,7 @@
         </div>
 
         <div class="display" id="display">
-            Masukkan angka untuk memulai
+            0
         </div>
 
         <div class="input-group">
@@ -286,7 +287,7 @@
             <div class="error" id="errorOp"></div>
         </div>
 
-        <button class="calculate-btn" id="calculateBtn">Hitung</button>
+
 
         <div class="continue-section" id="continueSection">
             <p><strong>Ingin melakukan operasi lanjutan?</strong></p>
@@ -314,7 +315,6 @@
         const display = document.getElementById('display');
         const angka1Input = document.getElementById('angka1');
         const angka2Input = document.getElementById('angka2');
-        const calculateBtn = document.getElementById('calculateBtn');
         const continueSection = document.getElementById('continueSection');
         const continueYes = document.getElementById('continueYes');
         const continueNo = document.getElementById('continueNo');
@@ -390,8 +390,22 @@
                 
                 currentOperation = btn.dataset.op;
                 clearErrors();
+                
+                // Auto calculate when operation is selected
+                autoCalculate();
             });
         });
+
+        // Auto calculate function
+        function autoCalculate() {
+            // Only calculate if both inputs are filled
+            const angka1 = parseFloat(angka1Input.value);
+            const angka2 = parseFloat(angka2Input.value);
+            
+            if (!isNaN(angka1) && !isNaN(angka2) && angka1Input.value !== '' && angka2Input.value !== '' && currentOperation) {
+                calculate();
+            }
+        }
 
         // Calculate function
         function calculate() {
@@ -422,12 +436,8 @@
                 }
 
                 // Display result
-                const operationSymbol = currentOperation === '*' ? '×' : currentOperation === '/' ? '÷' : currentOperation;
                 display.innerHTML = `
-                    <div style="font-size: 18px; margin-bottom: 10px;">
-                        ${angka1} ${operationSymbol} ${angka2} =
-                    </div>
-                    <div style="font-size: 32px; color: #48bb78;">
+                    <div style="font-size: 28px; font-weight: bold; color: #48bb78;">
                         ${hasil}
                     </div>
                 `;
@@ -456,10 +466,7 @@
             currentOperation = '';
             
             display.innerHTML = `
-                <div style="font-size: 18px; margin-bottom: 10px;">
-                    Lanjutan dari hasil:
-                </div>
-                <div style="font-size: 28px; color: #667eea;">
+                <div style="font-size: 26px; font-weight: bold; color: #667eea;">
                     ${lastResult}
                 </div>
             `;
@@ -478,19 +485,18 @@
             continueSection.classList.remove('show');
             clearErrors();
             
-            display.textContent = 'Masukkan angka untuk memulai';
+            display.textContent = '0';
             angka1Input.focus();
         }
 
         // Event listeners
-        calculateBtn.addEventListener('click', calculate);
         continueYes.addEventListener('click', continueCal);
         continueNo.addEventListener('click', () => {
             display.innerHTML = `
-                <div style="font-size: 18px; color: #48bb78;">
+                <div style="font-size: 16px; color: #48bb78; margin-bottom: 8px;">
                     Terima kasih telah menggunakan program kalkulator by Rizky Fitriyadi
                 </div>
-                <div style="font-size: 16px; margin-top: 10px; color: #666;">
+                <div style="font-size: 14px; color: #666;">
                     Semoga harimu menyenangkan! 😊
                 </div>
             `;
@@ -498,20 +504,12 @@
         });
         resetBtn.addEventListener('click', resetCalculator);
 
-        // Enter key support
-        document.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                if (continueSection.classList.contains('show')) {
-                    continueCal();
-                } else {
-                    calculate();
-                }
-            }
-        });
-
-        // Input validation on type
+        // Auto calculate when inputs change
         [angka1Input, angka2Input].forEach(input => {
-            input.addEventListener('input', clearErrors);
+            input.addEventListener('input', () => {
+                clearErrors();
+                autoCalculate();
+            });
         });
 
         // Focus on first input when page loads
