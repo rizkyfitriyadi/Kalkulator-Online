@@ -33,7 +33,7 @@ This project marks the beginning of my portfolio journey before moving into **da
 ---
 
 ## 🌐 Live Demo  
-👉 [Try the app here](https://your-demo-link.com)  
+👉 [Try the app here](https://rizkyfitriyadi.github.io/Kalkulator-Online/)  
 
 ---
 
