@@ -25,22 +25,8 @@ This project marks the beginning of my portfolio journey before moving into **da
 
 ---
 
-## 🛠️ Tech Stack  
-- Python  
-- Flask / Streamlit *(choose one depending on what you used)*  
-- HTML/CSS (for UI styling if applicable)  
-
----
-
 ## 🌐 Live Demo  
-👉 [Try the app here](https://rizkyfitriyadi.github.io/Kalkulator-Online/)  
-
----
-
-## 📌 Future Improvements
-- Add advanced operations (e.g., exponents, square root)  
-- Extend UI with history of calculations  
-- Deploy on a public platform (Heroku, Vercel, Streamlit Cloud)  
+👉 [Try the app here](https://rizkyfitriyadi.github.io/Kalkulator-Online/)   
 
 ---
 
